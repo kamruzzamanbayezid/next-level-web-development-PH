@@ -108,5 +108,127 @@ const cash = new PaymentWithCash();
 // Override introduce() method
 
 class Person {
-  constructor(public name: string, age: number) {}
+  constructor(public name: string, public profession: string) {}
+  introduce() {
+    console.log(`Hi!! This is ${this.name}. I am a ${this.profession}`);
+  }
 }
+
+class Teacher extends Person {
+  teachingHour: number;
+
+  constructor(
+    public name: string,
+    public profession: string,
+    teachingHour: number
+  ) {
+    super(name, profession);
+    this.teachingHour = teachingHour;
+  }
+
+  introduce(): void {
+    console.log(
+      `Hi!! This is ${this.name}. I am a ${this.profession}. I am teaching for ${this.teachingHour} hours!!`
+    );
+  }
+}
+
+class Admin extends Person {
+  role: string;
+
+  constructor(public name: string, public profession: string, role: string) {
+    super(name, profession);
+    this.role = role;
+  }
+
+  introduce(): void {
+    console.log(
+      `Hi!! This is ${this.name}. I am a ${this.profession}. I have ${this.role}`
+    );
+  }
+}
+
+const person1 = new Person("Habib", "Bekar");
+const person2 = new Teacher("Nazmul", "Teacher", 5);
+const person3 = new Admin("Aslam", "Admin", "Super Power");
+
+// person1.introduce();
+// person2.introduce();
+// person3.introduce();
+
+// Task 3: Create a Shape Calculator
+// Using (abstract + polymorphism + getter/setter)
+
+abstract class Calculator {
+  shape() {}
+}
+
+class Circle extends Calculator {
+  constructor(public radius: number) {
+    super();
+  }
+
+  shape(): void {
+    console.log(Math.PI * this.radius * this.radius);
+  }
+}
+
+class Area extends Calculator {
+  constructor(public height: number, public width: number) {
+    super();
+  }
+
+  shape(): void {
+    console.log(this.height * this.width);
+  }
+}
+
+function calculateShape(instance: Calculator) {
+  instance.shape();
+}
+
+const circle1 = new Circle(5);
+const area1 = new Area(5, 3);
+
+// calculateShape(circle1);
+// calculateShape(area1);
+
+//? Build a static-based ID generator
+
+// class User {
+//   public static counter: number = 0;
+//   public readonly id: number;
+//   public name: string;
+
+//   constructor(name: string) {
+//     this.name = name;
+//     this.id = ++User.counter;
+//   }
+// }
+
+// const user1 = new User("Bayezid");
+// const user2 = new User("Halim");
+
+// console.log(user1.id);
+// console.log(user2.id);
+
+class EnrolledStudent {
+  public name: string;
+  public static count: number = 1;
+  public readonly id: number;
+
+  constructor(name: string) {
+    this.name = name;
+    this.id = EnrolledStudent.count++;
+  }
+}
+
+const student1 = new EnrolledStudent("Bayezid");
+const student2 = new EnrolledStudent("Halim");
+const student3 = new EnrolledStudent("Halima");
+const student4 = new EnrolledStudent("Salam");
+
+// console.log(student1.id);
+// console.log(student2.id);
+// console.log(student3.id);
+// console.log(student4.id);
