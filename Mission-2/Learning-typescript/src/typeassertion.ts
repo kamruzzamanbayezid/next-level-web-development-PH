@@ -17,3 +17,25 @@ type User = {
 
 // 👉 তোমার প্রত্যাশিত Output:
 // NAME: KAMRUZZAMAN
+
+// 🎯 TypeScript Code:
+const element = document.getElementById("my-input") as HTMLInputElement;
+element.value = "Hello";
+
+// 👇 JavaScript Output (After Compilation):
+// const element = document.getElementById('my-input');
+// element.value = "Hello";
+
+{
+  interface User {
+    id: number;
+  }
+  interface User {
+    name: string;
+  }
+
+  const user: User = {
+    id: 555,
+    name: "sdvg",
+  };
+}
