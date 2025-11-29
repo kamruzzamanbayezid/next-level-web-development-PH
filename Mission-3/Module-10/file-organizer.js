@@ -3,7 +3,7 @@ const path = require("path");
 
 const sourceDir = path.join(__dirname, "output", "messy-files");
 // console.log(fs.readdirSync(sourceDir));
-console.log(fs.statSync(sourceDir));
+// console.log(fs.statSync(sourceDir));
 
 
 const organizedDir = path.join(__dirname, "output", "organized");
@@ -60,13 +60,9 @@ function initializeDirectories() {
                   fs.mkdirSync(path.join(organizedDir, category))
             }
       })
-
-
-
 }
 
 
-// initializeDirectories()
 
 function getCategories(filename) {
       const fileExt = path.extname(filename).toLowerCase();
@@ -100,79 +96,48 @@ function organizeFile() {
             if (stat.isDirectory()) {
                   return;
             }
+            const category = getCategories(file);
+            const destDir = path.join(organizedDir, category);
+            const destPath = path.join(destDir, file);
 
-            
+            fs.copyFileSync(sourcePath, destPath)
+            stats.total++;
+            stats.byCategory[category] = (stats.byCategory[category] || 0) + 1;
+
+            console.log(file);
+            console.log(stat);
+            console.log(category);
+
       })
-
 
 }
 
+function showHelp() {
+      console.log(`
+            file organize - usage
 
+            commands:
+            init - cerate file
+            organize - organize file into categories
 
+            example:
+            node file-organizer init
+            node file-organizer organize
+            `);
 
+}
 
+const command = process.argv[2];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function initializeDirectories() {
-//       if (!fs.existsSync(sourceDir)) {
-//             fs.mkdirSync(sourceDir, { recursive: true });
-
-//             testFiles.forEach((file) => {
-//                   fs.writeFileSync(path.join(sourceDir, file), `Content of ${file}`);
-//             });
-//       }
-
-//       console.log("Messy directories files are created!!!");
-
-//       if (!fs.existsSync(organizedDir)) {
-//             fs.mkdirSync(organizedDir, { recursive: true });
-//       }
-
-//       Object.keys(categories).forEach((category) => {
-//             const categoryPath = path.join(organizedDir, category);
-//             if (!fs.existsSync(categoryPath)) {
-//                   fs.mkdirSync(categoryPath);
-//             }
-//       });
-// }
-
-
+switch (command) {
+      case "init":
+            initializeDirectories()
+            break;
+      case "organize":
+            organizeFile()
+            break;
+      default:
+            showHelp()
+            break;
+}
 
