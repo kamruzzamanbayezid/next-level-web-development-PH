@@ -106,14 +106,109 @@ app.get("/users/:id", async (req: Request, res: Response) => {
       message: `The data for the user ${req?.params?.id} is retrieved`,
       data: result?.rows[0],
     });
-
-    // message: `The data for the ${req?.params?.id} is not found!`,
   } catch (error: any) {
     res.status(404).json({
       success: false,
       message: `${error?.message}`,
     });
   }
+});
+
+// update user using id
+app.put("/users/:id", async (req: Request, res: Response) => {
+  const { name, email } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *`,
+      [name, email, req?.params?.id]
+    );
+    if (result?.rows?.length === 0) {
+      res.status(404).json({ message: "User is not found" });
+    }
+    res.status(201).json({
+      success: true,
+      message: `User updated successfully`,
+      data: result?.rows[0],
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: `${error?.message}`,
+    });
+  }
+});
+
+// delete user using id
+app.delete("/users/:id", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`DELETE FROM users WHERE id = $1`, [
+      req?.params?.id,
+    ]);
+    if (result?.rowCount === 0) {
+      res.status(404).json({ message: "User is not found" });
+    }
+    res.status(201).json({
+      success: true,
+      message: `Data deleted successfully!!`,
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: `${error?.message}`,
+    });
+  }
+});
+
+// TODOS Routes
+
+// post todos
+app.post("/todos", async (req: Request, res: Response) => {
+  const { user_id, title } = req?.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO todos(user_id,title) VALUES($1,$2) RETURNING *`,
+      [user_id, title]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Todos Created successfully!",
+      data: result?.rows[0],
+    });
+  } catch (error: any) {
+    res.status(501).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+});
+
+// get all todos
+app.get("/todos", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM todos`);
+    res.status(201).json({
+      success: true,
+      message: "Todos retrieved successfully!",
+      data: result?.rows,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+});
+
+// get todo through user_id
+
+// handling error if wrong route is hit
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route isn't matched",
+  });
 });
 
 app.listen(port, () => {
