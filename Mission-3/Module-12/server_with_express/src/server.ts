@@ -202,6 +202,68 @@ app.get("/todos", async (req: Request, res: Response) => {
 });
 
 // get todo through user_id
+app.get("/todos/:id", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM todos WHERE id=$1`, [
+      req?.params?.id,
+    ]);
+    if (result?.rows?.length === 0) {
+      res.status(404).json({ message: "TODOS is not found" });
+    }
+    res.status(201).json({
+      success: true,
+      message: `The data for the Todo ${req?.params?.id} is retrieved`,
+      data: result?.rows[0],
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: `${error?.message}`,
+    });
+  }
+});
+
+// Update todos
+app.put("/todos/:id", async (req: Request, res: Response) => {
+  const { title } = req?.body;
+  const result = await pool.query(
+    `UPDATE todos SET title=$1 WHERE id=$2 RETURNING *`,
+    [title, req?.params?.id]
+  );
+  if (result?.rows.length === 0) {
+    res.status(404).json({ message: "Todos Not found" });
+  }
+  res.status(201).json({
+    success: true,
+    data: result?.rows[0],
+  });
+  try {
+  } catch (error: any) {
+    res.status(401).json({ message: error?.message });
+  }
+});
+
+// delete todos
+app.delete("/todos/:id", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`DELETE FROM todos WHERE id=$1`, [
+      req?.params?.id,
+    ]);
+    if (result?.rowCount === 0) {
+      res.status(404).json({ message: "User is not found" });
+    }
+    res.status(201).json({
+      success: true,
+      message: `Todos deleted successfully!!`,
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: `${error?.message}`,
+    });
+  }
+});
 
 // handling error if wrong route is hit
 app.use((req: Request, res: Response) => {
