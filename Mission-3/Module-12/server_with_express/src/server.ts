@@ -50,13 +50,26 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello From Next Level Web Development!!");
 });
 
-app.post("/", (req: Request, res: Response) => {
-  console.log("Req", req.body);
+app.post("/users", async (req: Request, res: Response) => {
+  const { name, email } = req.body;
 
-  res.status(201).json({
-    success: true,
-    message: "Api is running correctly",
-  });
+  try {
+    const result = await pool.query(
+      `INSERT INTO users(name,email) VALUES($1,$2) RETURNING *`,
+      [name, email]
+    );
+    // console.log("Inserted Data: ", result.rows);
+    res.status(201).json({
+      success: true,
+      message: "Data inserted successfully",
+      data: result?.rows[0],
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+    });
+  }
 });
 
 app.listen(port, () => {
