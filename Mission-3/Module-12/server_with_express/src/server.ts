@@ -50,6 +50,9 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello From Next Level Web Development!!");
 });
 
+// Users routs
+
+// post users
 app.post("/users", async (req: Request, res: Response) => {
   const { name, email } = req.body;
 
@@ -64,10 +67,51 @@ app.post("/users", async (req: Request, res: Response) => {
       message: "Data inserted successfully",
       data: result?.rows[0],
     });
-  } catch (error:any) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error?.message,
+    });
+  }
+});
+
+// get all users
+app.get("/users", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM users`);
+    res.status(201).json({
+      success: true,
+      message: "Users retrieved successfully!",
+      data: result?.rows,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+});
+
+// get single user using id
+app.get("/users/:id", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM users WHERE id = $1`, [
+      req?.params?.id,
+    ]);
+    if (result?.rows?.length === 0) {
+      res.status(404).json({ message: "User is not found" });
+    }
+    res.status(201).json({
+      success: true,
+      message: `The data for the user ${req?.params?.id} is retrieved`,
+      data: result?.rows[0],
+    });
+
+    // message: `The data for the ${req?.params?.id} is not found!`,
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: `${error?.message}`,
     });
   }
 });
