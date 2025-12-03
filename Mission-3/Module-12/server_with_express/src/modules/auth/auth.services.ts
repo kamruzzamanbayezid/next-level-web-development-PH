@@ -9,8 +9,6 @@ const userLogin = async (email: string, password: string) => {
   ]);
 
   if (result?.rows?.length === 0) {
-    console.log("I am from o length");
-
     return null;
   }
 
