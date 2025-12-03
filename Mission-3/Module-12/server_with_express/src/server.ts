@@ -4,6 +4,7 @@ import config from "./config";
 import initDB, { pool } from "./config/db";
 import { userRoutes } from "./modules/users/users.routes";
 import { todoRoutes } from "./modules/todos/todoRoutes";
+import { authRoutes } from "./modules/auth/auth.routes";
 
 const app = express();
 const port = config.port || 5000;
@@ -23,6 +24,9 @@ app.use("/users", userRoutes);
 
 // TODOS Routes
 app.use("/todos", todoRoutes);
+
+// Auth Routes
+app.use("/auth", authRoutes);
 
 // handling error if wrong route is hit
 app.use((req: Request, res: Response) => {
