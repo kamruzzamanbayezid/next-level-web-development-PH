@@ -1,3 +1,0 @@
-Application Started...
- 2025-11-28T04:23:30.089Z logged in time!!
- 2025-11-28T04:23:30.089Z fetched data!!
