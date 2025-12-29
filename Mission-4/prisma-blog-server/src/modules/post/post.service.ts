@@ -1,9 +1,12 @@
 import { Post } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
-const createPost = async (data: Post) => {
+const createPost = async (data: Post, authorId: string) => {
   const result = await prisma.post.create({
-    data: data,
+    data: {
+      ...data,
+      authorId,
+    },
   });
   return result;
 };
@@ -15,5 +18,5 @@ const getAllPost = async () => {
 
 export const postServices = {
   createPost,
-  getAllPost
+  getAllPost,
 };
