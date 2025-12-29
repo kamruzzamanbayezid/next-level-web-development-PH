@@ -1,0 +1,1 @@
+This is the file of script.js
