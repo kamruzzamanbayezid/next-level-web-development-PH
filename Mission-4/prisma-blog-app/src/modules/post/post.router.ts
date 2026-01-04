@@ -5,6 +5,7 @@ import { Role } from "../../enums/user.enum";
 
 const router = Router();
 
-router.post("/", auth(Role.ADMIN,Role.USER), postController.createPost);
+router.post("/", auth(Role.ADMIN, Role.USER), postController.createPost);
+router.get("/", postController.getALlPost);
 
 export const postRouter = router;
