@@ -3,7 +3,6 @@ import { prisma } from "./lib/prisma";
 
 const main = async () => {
   const port = process.env.PORT || 3000;
-  console.log("Port", port);
 
   try {
     await prisma.$connect();
