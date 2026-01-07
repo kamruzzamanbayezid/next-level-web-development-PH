@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { postServices } from "./post.service";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
+import { Role } from "../../enums/user.enum";
 
 const createPost = async (req: Request, res: Response) => {
   const data = req?.body;
@@ -91,8 +92,85 @@ const getPostById = async (req: Request, res: Response) => {
   }
 };
 
+const getMyPosts = async (req: Request, res: Response) => {
+  const authorId = req?.user?.id;
+  try {
+    const result = await postServices.getMyPosts(authorId);
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(501).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+};
+
+const updatePost = async (req: Request, res: Response) => {
+  const authorId = req?.user?.id as string;
+  const postId = req?.params?.postId as string;
+  const isAdmin = req?.user?.role === Role.ADMIN;
+  try {
+    const result = await postServices.updatePost(
+      postId,
+      authorId,
+      req?.body,
+      isAdmin
+    );
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(501).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+};
+
+const deletePost = async (req: Request, res: Response) => {
+  const authorId = req?.user?.id as string;
+  const postId = req?.params?.postId as string;
+  const isAdmin = req?.user?.role === Role.ADMIN;
+  try {
+    const result = await postServices.deletePost(postId, authorId, isAdmin);
+    return res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(501).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+};
+
+const getStats = async (req: Request, res: Response) => {
+  try {
+    const result = await postServices.getStats();
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(501).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+};
+
 export const postController = {
   createPost,
   getAllPost,
   getPostById,
+  getMyPosts,
+  updatePost,
+  deletePost,
+  getStats,
 };

@@ -92,10 +92,33 @@ const updateCommentById = async (req: Request, res: Response) => {
     });
   }
 };
+
+const moderateCommentByAdmin = async (req: Request, res: Response) => {
+  const commentId = req.params.commentId as string;
+
+  try {
+    const result = await commentServices.moderateCommentByAdmin(
+      commentId,
+      req.body
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Comment Moderate successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(501).json({
+      success: false,
+      message: error?.message,
+    });
+  }
+};
+
 export const commentControllers = {
   createPost,
   getCommentById,
   getCommentByAuthorId,
   deleteCommentById,
   updateCommentById,
+  moderateCommentByAdmin,
 };
