@@ -4,6 +4,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
 import { commentRouter } from "./modules/comment/commentRoutes";
+import errorHandler from "./middleware/globalErrorHandler";
 
 const app = express();
 
@@ -23,5 +24,8 @@ app.use("/api/v1/comments", commentRouter);
 app.get("/", (req, res) => {
   res.send("This is Prisma blog app");
 });
+
+// Global error handler
+app.use(errorHandler);
 
 export default app;

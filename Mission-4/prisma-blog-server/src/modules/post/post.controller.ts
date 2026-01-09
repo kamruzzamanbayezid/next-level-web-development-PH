@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { postServices } from "./post.service";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 import { Role } from "../../enums/user.enum";
 
-const createPost = async (req: Request, res: Response) => {
+const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const data = req?.body;
   const authorId = req?.user?.id;
 
@@ -14,10 +14,7 @@ const createPost = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    return res.status(501).json({
-      success: false,
-      message: error?.message,
-    });
+    next(error);
   }
 };
 

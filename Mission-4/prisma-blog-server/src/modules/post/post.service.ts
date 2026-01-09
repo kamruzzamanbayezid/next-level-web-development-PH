@@ -193,11 +193,6 @@ const getMyPosts = async (authorId: string) => {
   return { average_views, result };
 };
 
-/***
- * Admin -- update all post
- * user -- update his own post. but can not update isFeatured
- */
-
 const updatePost = async (
   postId: string,
   authorId: string,
