@@ -20,6 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { ModeToggle } from "./ui/ModeToggle";
 
 interface MenuItem {
   title: string;
@@ -77,7 +78,7 @@ const Navbar = ({
 }: Navbar1Props) => {
   return (
     <section className={cn("py-4", className)}>
-      <div className="container">
+      <div className="container mx-auto px-4">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
@@ -101,6 +102,7 @@ const Navbar = ({
             </div>
           </div>
           <div className="flex gap-2">
+            <ModeToggle />
             <Button asChild variant="outline" size="sm">
               <Link href={auth.login.url}>{auth.login.title}</Link>
             </Button>
@@ -149,6 +151,7 @@ const Navbar = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
+                    <ModeToggle />
                     <Button asChild variant="outline">
                       <a href={auth.login.url}>{auth.login.title}</a>
                     </Button>
